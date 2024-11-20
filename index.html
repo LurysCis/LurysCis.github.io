@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión del Hospital</title>
+    <link rel="stylesheet" href="style.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    <div class="container">
+        <h1>Sistema de Gestión del Hospital San Fernando</h1>
+        <i class='bx bx-user-plus'></i>
+        <button onclick="showAddPatientForm()">Agregar Paciente</button>
+        <i class='bx bxs-show'></i>
+        <button onclick="showViewPatients()">Ver Pacientes</button>
+        <i class='bx bx-search-alt'></i>
+        <button onclick="showSearchPatient()">Buscar Paciente</button>
+        <i class='bx bx-edit-alt'></i>
+        <button onclick="showEditPatient()">Editar Paciente</button>
+        <i class='bx bx-user-x'></i>
+        <button onclick="showDeletePatient()">Eliminar Paciente</button>
+        <div id="form-container"></div>
+        <div id="patient-list"></div>
+    </div>
+
+    <script>
+        const storageKey = 'patients';
+        
+        // Load patients from localStorage
+        function loadPatients() {
+            const patients = localStorage.getItem(storageKey);
+            return patients ? JSON.parse(patients) : [];
+        }
+
+        // Save patients to localStorage
+        function savePatients(patients) {
+            localStorage.setItem(storageKey, JSON.stringify(patients));
+        }
+
+        // Show Add Patient Form
+        function showAddPatientForm() {
+            document.getElementById('form-container').innerHTML = `
+                <h2>Agregar Paciente</h2>
+                <form id="add-patient-form">
+                    <input type="text" id="name" placeholder="Nombre" required>
+                    <input type="text" id="disease" placeholder="Enfermedad" required>
+                    <input type="number" id="age" placeholder="Edad" required>
+                    <input type="number" id="bed" placeholder="Número de Cama" required>
+                    <input type="number" id="phone" placeholder="Número de Teléfono" required>
+                    <input type="number" id="id" placeholder="identificación" required>
+                    <button type="submit">Agregar</button>
+                </form>
+            `;
+            document.getElementById('add-patient-form').addEventListener('submit', addPatient);
+        }
+
+        // Add Patient
+        function addPatient(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const disease = document.getElementById('disease').value;
+            const age = parseInt(document.getElementById('age').value, 10);
+            const bed = parseInt(document.getElementById('bed').value, 10);
+            const phone = parseInt(document.getElementById('phone').value, 10);
+            const id = parseInt(document.getElementById('id').value, 10);
+            const patients = loadPatients();
+            patients.push({ name, disease, age, bed, phone, id });
+            savePatients(patients);
+            alert('Paciente agregado.');
+            showViewPatients();
+        }
+
+        // Show View Patients
+        function showViewPatients() {
+            const patients = loadPatients();
+            const patientList = patients.map((patient, index) => `
+                <div class="patient-info">
+                    <h3>Paciente ${index + 1}</h3>
+                   <p>Nombre: ${patient.name}</p>
+                    <p>Enfermedad: ${patient.disease}</p>
+                    <p>Edad: ${patient.age}</p>
+                    <p>Cama: ${patient.bed}</p>
+                    <p>Teléfono: ${patient.phone}</p>
+                    <p>identificación: ${patient.id}</p>
+                </div>
+            `).join('');
+            document.getElementById('patient-list').innerHTML = `
+                <h2>Lista de Pacientes</h2>
+                ${patientList}
+            `;
+        }
+
+        // Show Search Patient
+        function showSearchPatient() {
+            document.getElementById('form-container').innerHTML = `
+                <h2>Buscar Paciente</h2>
+                <input type="text" id="search-field" placeholder="Buscar por nombre o enfermedad">
+                <button onclick="searchPatient()">Buscar</button>
+            `;
+        }
+
+        // Search Patient
+        function searchPatient() {
+            const query = document.getElementById('search-field').value.toLowerCase();
+            const patients = loadPatients();
+            const result = patients.filter(patient =>
+                patient.name.toLowerCase().includes(query) ||
+                patient.disease.toLowerCase().includes(query)
+            );
+            const patientList = result.map((patient, index) => `
+                <div class="patient-info">
+                    <h3>Paciente ${index + 1}</h3>
+                    <p>Nombre: ${patient.name}</p>
+                    <p>Enfermedad: ${patient.disease}</p>
+                    <p>Edad: ${patient.age}</p>
+                    <p>Cama: ${patient.bed}</p>
+                    <p>Teléfono: ${patient.phone}</p>
+                </div>
+            `).join('');
+            document.getElementById('patient-list').innerHTML = `
+                <h2>Resultados de la Búsqueda</h2>
+                ${patientList || '<p>No se encontraron resultados.</p>'}
+            `;
+        }
+
+        // Show Edit Patient
+        function showEditPatient() {
+            document.getElementById('form-container').innerHTML = `
+                <h2>Editar Paciente</h2>
+                <input type="number" id="edit-index" placeholder="Número de paciente">
+                <button onclick="editPatient()">Editar</button>
+            `;
+        }
+
+        // Edit Patient
+        function editPatient() {
+            const index = parseInt(document.getElementById('edit-index').value, 10);
+            const patients = loadPatients();
+            if (index >= 0 && index < patients.length) {
+                const patient = patients[index];
+                document.getElementById('form-container').innerHTML = `
+                    <h2>Editar Paciente ${index + 1}</h2>
+                    <input type="text" id="edit-name" value="${patient.name}" placeholder="Nombre">
+                    <input type="text" id="edit-disease" value="${patient.disease}" placeholder="Enfermedad">
+                    <input type="number" id="edit-age" value="${patient.age}" placeholder="Edad">
+                    <input type="number" id="edit-bed" value="${patient.bed}" placeholder="Número de Cama">
+                    <input type="number" id="edit-phone" value="${patient.phone}" placeholder="Número de Teléfono">
+                    <button onclick="saveEdit(${index})">Guardar Cambios</button>
+                `;
+            } else {
+                alert('Número de paciente no válido.');
+            }
+        }
+
+        // Save Edited Patient
+        function saveEdit(index) {
+            const patients = loadPatients();
+            patients[index] = {
+                name: document.getElementById('edit-name').value,
+                disease: document.getElementById('edit-disease').value,
+                age: parseInt(document.getElementById('edit-age').value, 10),
+                bed: parseInt(document.getElementById('edit-bed').value, 10),
+                phone: parseInt(document.getElementById('edit-phone').value, 10),
+            };
+            savePatients(patients);
+            alert('Paciente actualizado.');
+            showViewPatients();
+        }
+
+        // Show Delete Patient
+        function showDeletePatient() {
+            document.getElementById('form-container').innerHTML = `
+                <h2>Eliminar Paciente</h2>
+                <input type="number" id="delete-index" placeholder="Número de paciente">
+                <button onclick="deletePatient()">Eliminar</button>
+            `;
+        }
+
+        // Delete Patient
+        function deletePatient() {
+            const index = parseInt(document.getElementById('delete-index').value, 10);
+            const patients = loadPatients();
+            if (index >= 0 && index < patients.length) {
+                patients.splice(index, 1);
+                savePatients(patients);
+                alert('Paciente eliminado.');
+                showViewPatients();
+            } else {
+                alert('Número de paciente no válido.');
+            }
+        }
+    </script>
+</body>
+</html>

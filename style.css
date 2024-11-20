@@ -1,0 +1,156 @@
+@import url(http://127.0.0.1:5501/prueba.html);
+/* Estilos generales para el cuerpo */
+body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    background-image:url(https://nintihospital.com/assets/images/backgrounds/2.jpg);
+    margin: 0;
+    padding: 0;
+}
+
+/* Contenedor principal */
+.container {
+    width: 80%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    background: whitesmoke;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Estilo para el título principal */
+h1 {
+    font-size: 36px;
+    color: #2c3e50;
+    margin-bottom: 30px;
+}
+
+/* Botones de navegación */
+button {
+    background-color: #61b6af;
+    color: white;
+    font-size: 16px;
+    border: none;
+    padding: 10px 20px;
+    margin: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+button:active {
+    background-color: #a9d4ef;
+}
+
+/* Estilos del contenedor de formularios */
+#form-container {
+    margin-top: 20px;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+input[type="number"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+input:focus {
+    border-color: #3498db;
+    outline: none;
+}
+
+button[type="submit"] {
+    background-color: #347c9b;
+    font-size: 18px;
+}
+
+button[type="submit"]:hover {
+    background-color: #327da8;
+}
+
+/* Lista de pacientes */
+#patient-list {
+    margin-top: 40px;
+}
+
+.patient-info {
+    background-color: #ecf0f1;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 15px 0;
+    text-align: left;
+}
+
+.patient-info h3 {
+    font-size: 22px;
+    color: #34495e;
+}
+
+.patient-info p {
+    font-size: 16px;
+    color: #7f8c8d;
+}
+
+/* Estilo para los resultados de búsqueda */
+#patient-list h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: #2c3e50;
+}
+
+#patient-list p {
+    font-size: 18px;
+    color: #2e8c93;
+    margin-top: 20px;
+}
+
+/* Estilos para el formulario de edición */
+#form-container input {
+    width: 45%;
+    margin-right: 10px;
+    display: inline-block;
+}
+
+#form-container input:last-child {
+    margin-right: 0;
+}
+
+@media (max-width: 768px) {
+    /* Ajustar el diseño para pantallas pequeñas */
+    #form-container input {
+        width: 100%;
+        margin-right: 0;
+    }
+
+    button {
+        width: 100%;
+        font-size: 18px;
+    }
+
+    .patient-info {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 28px;
+    }
+
+    #patient-list h2 {
+        font-size: 24px;
+    }
+}
